@@ -1,7 +1,5 @@
 extern crate ffmpeg_next as ffmpeg;
 
-use std::env;
-
 fn main() {
     ffmpeg::init().unwrap();
 
