@@ -99,6 +99,7 @@ fn add_metadata_env(
     env: &mut BTreeMap<bytes::Bytes, bytes::Bytes>,
     meta: &cargo_metadata::Package,
 ) {
+    env.insert("CARGO_PKG_NAME".into(), meta.name.to_string().into());
     env.insert("CARGO_PKG_VERSION".into(), meta.version.to_string().into());
     env.insert(
         "CARGO_PKG_VERSION_MAJOR".into(),
@@ -116,8 +117,50 @@ fn add_metadata_env(
         "CARGO_PKG_VERSION_PRE".into(),
         meta.version.pre.as_str().to_owned().into(),
     );
-
-    // TODO: more of these
+    env.insert(
+        "CARGO_PKG_AUTHORS".into(),
+        meta.authors.join(":").into(),
+    );
+    env.insert(
+        "CARGO_PKG_DESCRIPTION".into(),
+        meta.description.clone().unwrap_or_default().into(),
+    );
+    env.insert(
+        "CARGO_PKG_HOMEPAGE".into(),
+        meta.homepage.clone().unwrap_or_default().into(),
+    );
+    env.insert(
+        "CARGO_PKG_REPOSITORY".into(),
+        meta.repository.clone().unwrap_or_default().into(),
+    );
+    env.insert(
+        "CARGO_PKG_LICENSE".into(),
+        meta.license.clone().unwrap_or_default().into(),
+    );
+    env.insert(
+        "CARGO_PKG_LICENSE_FILE".into(),
+        meta.license_file
+            .as_ref()
+            .map(|p| p.to_string())
+            .unwrap_or_default()
+            .into(),
+    );
+    env.insert(
+        "CARGO_PKG_RUST_VERSION".into(),
+        meta.rust_version
+            .as_ref()
+            .map(|v| v.to_string())
+            .unwrap_or_default()
+            .into(),
+    );
+    env.insert(
+        "CARGO_PKG_README".into(),
+        meta.readme
+            .as_ref()
+            .map(|p| p.to_string())
+            .unwrap_or_default()
+            .into(),
+    );
 }
 
 fn extern_declaration(
